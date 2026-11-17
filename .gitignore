@@ -1,0 +1,9 @@
+venv/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+seen.db
+last_fetch.json
+/digest.md
+/all_items.csv
