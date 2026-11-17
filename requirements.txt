@@ -1,3 +1,0 @@
-feedparser
-requests
-anthropic   # optional: only needed for LLM scoring
