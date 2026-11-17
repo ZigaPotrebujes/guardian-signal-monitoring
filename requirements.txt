@@ -1,0 +1,3 @@
+feedparser==6.0.14
+requests==2.34.2
+# Optional LLM step (off by default): `pip install anthropic`, then set `ANTHROPIC_API_KEY`. Without it, everything else runs with no outside vendor.
