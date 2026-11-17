@@ -9,6 +9,7 @@ labeled run-3 leads. "Surfaced" = would reach the lead list (score >= MIN_SCORE_
 import agent
 import config
 from labeled_leads import LABELED
+from labeled_accounts import LABELED_ACCOUNTS
 
 
 def main():
@@ -46,5 +47,23 @@ def main():
     print("Recall here covers only items already surfaced in run 3; posts the old scorer missed are unlabeled.")
 
 
+def accounts():
+    """Company lane: how many of the 26 labelled live headlines would the scorer put in 'Account signals'?"""
+    print("\n--- Company lane: 26 live headlines from one run (2026-11-17), labelled by me ---")
+    rows = []
+    for label, headline in LABELED_ACCOUNTS:
+        s = agent.score_b2b(agent.make_item("b2b_news", headline, ""))
+        rows.append((label, s["score"], s["trigger"], s["score"] >= config.B2B_MIN_SCORE, headline))
+    for label, score, trig, shown, headline in rows:
+        print(f"{label:5} {score:>2} {trig:9} {'SURFACED' if shown else '-':8}  {headline[:70]}")
+    good = [r for r in rows if r[0] == "good"]
+    usable = [r for r in rows if r[0] in ("good", "weak")]
+    shown = [r for r in rows if r[3]]
+    print(f"\nLabelled good {len(good)}/{len(rows)}, weak {sum(r[0] == 'weak' for r in rows)}, no {sum(r[0] == 'no' for r in rows)}")
+    print(f"Scorer surfaced {len(shown)} (score >= {config.B2B_MIN_SCORE}); good ones found: {sum(r[3] for r in good)}/{len(good)}")
+    print("Caveat: headlines only, one day's news, 26 items. It shows the news approach is weak, not by how much.")
+
+
 if __name__ == "__main__":
     main()
+    accounts()

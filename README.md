@@ -7,22 +7,22 @@ A small monitoring agent I built in a few hours as my answer to "show us somethi
 - **My role:** I chose the concept, specified the behaviour, ran it live, labelled the output and directed every change. Claude wrote the code.
 - **Honest result:** my first version surfaced 10 "leads". I judged that only 1 was something the product could act on, because it matched *identity theft*, not *product fit*. I added a fit gate: on my 11 labelled posts the old scorer surfaces 5 (1 real fit), the new one 3 (all fits). Run `python eval.py`.
 - **Caveat:** that result is in-sample. I wrote the rules after reading those posts, so the fair test is fresh data labelled blind, which I have not done yet.
-- **Second finding:** news about deepfake CEO fraud was a poor way to find companies (one 2024 case repeated about ten times, and not really Guardian's problem). A better trigger is an organization or public figure publicly warning about impersonators.
+- **Company lane (measured, and it failed):** I labelled 26 live company headlines. 2 were good (a named company warning about impersonation of itself), 12 weak, 12 off-topic. The scorer surfaced none of the good ones (`python eval.py`, bottom). Finding companies from news is a weak method: the feed is full of seasonal noise (Black Friday, outages, blackout hoaxes). Next: structural signals (hiring, the check-up), not more news queries.
 
 ## Try it
 ```
 pip install -r requirements.txt
-python eval.py                # my labelled posts, old vs new scorer. No key, no network
+python eval.py                # my labelled posts and headlines, old vs new scorer. No key, no network
 python agent.py --demo        # sample digest, offline
 python checkup.py --demo      # prototype of a free brand "impersonation check-up" (fictional data)
 python agent.py               # live run (needs internet; Reddit may throttle)
 ```
-Optional: set `ANTHROPIC_API_KEY` to add LLM scoring and draft replies (off by default).
+Optional LLM step (off by default): `pip install anthropic`, then set `ANTHROPIC_API_KEY`. Without it, everything else runs with no outside vendor.
 
 ## Repo map
 - `agent.py`: the pipeline (fetch, dedupe, score, digest). Start here.
-- `config.py`: every setting. `eval.py` and `labeled_leads.py`: the measurement. `checkup.py`: the check-up prototype.
-- `sample_output/`: a redacted sample digest and check-up report.
+- `config.py`: every setting. `eval.py`, `labeled_leads.py` and `labeled_accounts.py`: the measurement. `checkup.py`: the check-up prototype.
+- `digest_sample.md` and `checkup_demo.md`: a redacted sample digest and a fictional check-up report.
 - `LOG.md`: the run-by-run log of what went wrong and what I changed.
 
 ## How it works
@@ -50,4 +50,4 @@ Cost per qualified lead = (monthly source cost + my review time) / leads I verif
 4. Hiring signals (trust and safety, brand protection roles) as a buyer trigger.
 5. Track which surfaced items lead to a reply or signup, and report cost per qualified lead by source.
 
-More detail: [`LOG.md`](LOG.md) and [`sample_output/digest_sample.md`](sample_output/digest_sample.md).
+More detail: [`LOG.md`](LOG.md) and [`digest_sample.md`](digest_sample.md).
